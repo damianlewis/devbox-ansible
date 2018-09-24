@@ -5,7 +5,6 @@ require 'yaml'
 
 settings = YAML::load(File.read("config.yaml"))
 aliases = "aliases"
-post_script = "post"
 
 supported_os = ["ubuntu"]
 supported_ubuntu_versions = ["14.04", "16.04", "18.04"]
@@ -13,7 +12,6 @@ supported_box_types = ["lamp", "lemp", "apache-php", "nginx-php", "mysql"]
 
 default_os = "ubuntu"
 default_os_version = "16.04"
-default_box_type = "nginx-php"
 
 Vagrant.configure("2") do |config|
     if settings.has_key?("servers")
