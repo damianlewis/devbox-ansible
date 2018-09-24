@@ -1,0 +1,53 @@
+---
+# Load balancer server defaults
+lb-server-defaults: &lb-server
+  name: devbox_lb
+  hostname: devbox-lb
+  group: lb
+  forward-ports:
+    - guest: 80
+      host: 8000
+    - guest: 443
+      host: 44300
+  os: ubuntu
+  os-version: "16.04"
+
+# Database server defaults
+db-server-defaults: &db-server
+  name: devbox_db
+  hostname: devbox-db
+  group: db
+  forward-ports:
+    - guest: 3306
+      host: 33060
+  os: ubuntu
+  os-version: "14.04"
+  type: mysql
+  box-version: "1"
+
+# Application server defaults
+app-server-defaults: &app-server
+  name: devbox_app
+  hostname: devbox-app
+  group: app
+  forward-ports:
+    - guest: 80
+      host: 8000
+  os: ubuntu
+  os-version: "16.04"
+  type: apache-php
+  folders:
+    - map: ./
+      to: /vagrant
+
+# Servers to configure
+servers:
+  - <<: *lb-server
+    ip: "192.168.2.40"
+    public-ip: "192.168.2.41"
+  - <<: *db-server
+    ip: "192.168.2.42"
+  - <<: *app-server
+    ip: "192.168.2.43"
+  - <<: *app-server
+    ip: "192.168.2.44"
