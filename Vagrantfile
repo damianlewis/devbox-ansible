@@ -51,7 +51,7 @@ Vagrant.configure("2") do |config|
             end
 
             config.vm.define machine do |node|
-                # Configure the vagrant box
+                # Configure the vagrant box.
                 node.vm.hostname = "vm#{server_count}-#{hostname}"
                 if server.has_key?("type")
                     node.vm.box = server["box"] ||= "damianlewis/#{os ||= default_os}-#{os_version ||= default_os_version}-#{type}"
@@ -60,7 +60,7 @@ Vagrant.configure("2") do |config|
                 end
                 node.vm.box_version = server["box-version"] ||= ">= 0"
 
-                # Configure VirtualBox settings
+                # Configure VirtualBox settings.
                 node.vm.provider "virtualbox" do |vb|
                     vb.name = machine
                     vb.memory = server["memory"] ||= "1048"
@@ -71,19 +71,19 @@ Vagrant.configure("2") do |config|
                     end
                 end
 
-                # Configure private network
+                # Configure private network.
                 if server.has_key?("ip")
                     node.vm.network "private_network", ip: server["ip"]
                 else
                     node.vm.network "private_network", type: "dhcp"
                 end
 
-                # Configure public/bridged network
+                # Configure public/bridged network.
                 if server.has_key?("public-ip")
                     node.vm.network "public_network", ip: server["public-ip"], bridge: server["bridge"] ||= "en1: Wi-Fi (AirPort)"
                 end
 
-                # Configure ports to forward
+                # Configure ports to forward.
                 if server.has_key?("forward-ports")
                     server["forward-ports"].each do |port|
                         node.vm.network "forwarded_port", guest: port["guest"], host: port["host"] + port_count, auto_correct: true
@@ -92,10 +92,10 @@ Vagrant.configure("2") do |config|
                     port_count += 1
                 end
 
-                # Disable default shared folder
+                # Disable default shared folder.
                 node.vm.synced_folder ".", "/vagrant", disabled: true
 
-                # Configure shared folders
+                # Configure shared folders.
                 if server.has_key?("folders")
                     server["folders"].each do |folder|
                         if folder["type"] == "nfs"
@@ -106,12 +106,12 @@ Vagrant.configure("2") do |config|
                     end
                 end
 
-                # Create bash aliases
+                # Create bash aliases.
                 if File.exists? aliases
                     node.vm.provision "file", source: aliases, destination: "~/.bash_aliases"
                 end
 
-                # Provision the servers
+                # Provision the servers.
                 if server === settings["servers"].last
                     group_names = []
 
