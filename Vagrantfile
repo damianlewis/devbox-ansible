@@ -128,6 +128,9 @@ Vagrant.configure("2") do |config|
                         ansible.limit = "all"
                         ansible.playbook = "provision.yaml"
                         ansible.groups = groups
+                        if settings.has_key?("debug") and settings["debug"]
+                            ansible.verbose = '-vvv'
+                        end
                     end
                 end
             end

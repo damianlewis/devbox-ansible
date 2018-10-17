@@ -1,4 +1,6 @@
 ---
+#debug: true
+
 # Load balancer server defaults.
 lb-server-defaults: &lb-server
   name: devbox_lb
