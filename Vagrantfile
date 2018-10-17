@@ -65,7 +65,7 @@ Vagrant.configure("2") do |config|
                     vb.name = machine
                     vb.memory = server["memory"] ||= "1048"
                     vb.cpus = server["cpus"] ||= "1"
-                    vb.linked_clone = true
+                    # vb.linked_clone = true
                     if server.has_key?("gui") && server["gui"] == true
                         vb.gui = true
                     end
