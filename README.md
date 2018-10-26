@@ -42,15 +42,15 @@ public-ip: "192.168.178.41"
 By default, DevBox forwards port 22 (for SSH) on the guest machine to port 2222 on the host. To forward additional ports, add the `forward-ports` list property with `guest` and `host` properties set to the ports you want to forward.
 ```yaml
 forward-ports:
-    - guest: 80
-      host: 8000
-    - guest: 443
-      host: 44300
+- guest: 80
+  host: 8000
+- guest: 443
+  host: 44300
 ```
 
 
 #### OS
-Currently, DevBox only supports Ubuntu which defaults to version 16.04. To use a different version, change the `os-version` property. Supported versions are `14.04`, `16.04'`and `18.04`. 
+Currently, DevBox only supports Ubuntu which defaults to version 16.04. To use a different version, change the `os-version` property. Supported versions are `14.04`, `16.04'`and `18.04`.
 ```yaml
 os: "ubuntu"
 os-version: "16.04"
@@ -77,16 +77,16 @@ box-version: "1"
 By default, DevBox doesn't share/sync any folders between the guest and host machines. To share folders with the guest machine add the `folders` list property and `map` the host folder `to` the guest folder.
 ```yaml
 folders:
-    - map: ~/code
-      to: /vagrant/code
+- map: ~/code
+  to: /vagrant/code
 ```
 
 To use NFS for a shared folder, add the `type` property.
 ```yaml
 folders:
-    - map: ~/code
-      to: /vagrant/code
-      type: nfs
+- map: ~/code
+  to: /vagrant/code
+  type: nfs
 ```
 
 
