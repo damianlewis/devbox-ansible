@@ -126,7 +126,7 @@ Vagrant.configure("2") do |config|
 
                     node.vm.provision "ansible" do |ansible|
                         ansible.limit = "all"
-                        ansible.playbook = "provision.yaml"
+                        ansible.playbook = "provision.yml"
                         ansible.groups = groups
                         if settings.has_key?("debug") and settings["debug"]
                             ansible.verbose = '-vvv'
