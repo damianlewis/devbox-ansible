@@ -77,16 +77,34 @@ box-version: "1"
 By default, DevBox doesn't share/sync any folders between the guest and host machines. To share folders with the guest machine add the `folders` list property and `map` the host folder `to` the guest folder.
 ```yaml
 folders:
-- map: ~/code
-  to: /vagrant/code
+- map: ./public
+  to: /var/www/public
 ```
 
 To use NFS for a shared folder, add the `type` property.
 ```yaml
 folders:
-- map: ~/code
-  to: /vagrant/code
+- map: ./public
+  to: /var/www/public
   type: nfs
+```
+
+To change the owner or group of the shared folder on the guest machine, add the `owner` and `group` properties.
+```yaml
+folders:
+- map: ./public
+  to: /var/www/public
+  owner: root
+  group: www-data
+```
+
+To change the permissions of the shared folder on the guest machine, add the `dmode` and `fmode` properties. The default directory permissions (dmode) are 755 and the default file permissions (fmode) are 644.
+```yaml
+folders:
+- map: ./public
+  to: /var/www/public
+  dmode: 775
+  fmode: 664
 ```
 
 

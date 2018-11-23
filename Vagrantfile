@@ -99,9 +99,24 @@ Vagrant.configure("2") do |config|
                 if server.has_key?("folders")
                     server["folders"].each do |folder|
                         if folder["type"] == "nfs"
-                            node.vm.synced_folder folder["map"], folder["to"], type: "nfs", mount_options: ['actimeo=1', 'nolock']
+                            node.vm.synced_folder folder["map"], folder["to"],
+                            owner: folder["owner"] ||= "",
+                            group: folder["group"] ||= "",
+                            type: "nfs",
+                            mount_options: [
+                              "dmode=#{folder['dmode'] ||= 755}",
+                              "fmode=#{folder['fmode'] ||= 644}",
+                              "actimeo=1",
+                              "nolock"
+                            ]
                         else
-                            node.vm.synced_folder folder["map"], folder["to"]
+                            node.vm.synced_folder folder["map"], folder["to"],
+                            owner: folder["owner"] ||= "",
+                            group: folder["group"] ||= "",
+                            mount_options: [
+                              "dmode=#{folder['dmode'] ||= 755}",
+                              "fmode=#{folder['fmode'] ||= 644}"
+                            ]
                         end
                     end
                 end

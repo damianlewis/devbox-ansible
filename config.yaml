@@ -39,8 +39,10 @@ app-server-defaults: &app-server
   os-version: '16.04'
   type: apache-php
   folders:
-  - map: ./
-    to: /vagrant
+  - map: ./public
+    to: /var/www/public
+    owner: root
+    group: www-data
 
 # Servers to configure.
 servers:
