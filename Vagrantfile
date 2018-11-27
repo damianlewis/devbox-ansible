@@ -100,6 +100,7 @@ Vagrant.configure("2") do |config|
                     server["folders"].each do |folder|
                         if folder["type"] == "nfs"
                             node.vm.synced_folder folder["map"], folder["to"],
+                            create: folder["create"] ||= true,
                             owner: folder["owner"] ||= "",
                             group: folder["group"] ||= "",
                             type: "nfs",
@@ -111,6 +112,7 @@ Vagrant.configure("2") do |config|
                             ]
                         else
                             node.vm.synced_folder folder["map"], folder["to"],
+                            create: folder["create"] ||= true,
                             owner: folder["owner"] ||= "",
                             group: folder["group"] ||= "",
                             mount_options: [
