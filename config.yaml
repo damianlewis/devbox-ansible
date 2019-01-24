@@ -43,6 +43,8 @@ app-server-defaults: &app-server
     to: /var/www/public
     owner: root
     group: www-data
+    dmode: 755
+    fmode: 644
 
 # Servers to configure.
 servers:
