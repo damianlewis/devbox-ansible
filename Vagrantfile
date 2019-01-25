@@ -63,7 +63,7 @@ Vagrant.configure("2") do |config|
                 # Configure VirtualBox settings.
                 node.vm.provider "virtualbox" do |vb|
                     vb.name = machine
-                    vb.memory = server["memory"] ||= "1048"
+                    vb.memory = server["memory"] ||= "1024"
                     vb.cpus = server["cpus"] ||= "1"
                     # vb.linked_clone = true
                     if server.has_key?("gui") && server["gui"] == true
