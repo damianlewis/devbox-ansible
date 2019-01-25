@@ -13,6 +13,8 @@ lb-server-defaults: &lb-server
     host: 44300
   os: ubuntu
   os-version: '16.04'
+  cpus: 2
+  memory: 4096
 
 # Database server defaults.
 db-server-defaults: &db-server
