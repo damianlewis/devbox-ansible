@@ -15,16 +15,30 @@ The `config.yaml` file allows you to configure the servers by adding individual 
 
 
 #### VM name
-Use the `name` property to update the VirtualBox VM name. By default this is 'devbox'.
+Use the `name` property to update the VirtualBox VM name. By default this is `devbox`.
 ```yaml
 name: devbox_app
 ```
 
 
 #### Hostname
-Use the `hostname` property to update the server hostname. By default this is 'devbox'.
+Use the `hostname` property to update the server hostname. By default this is `devbox`.
 ```yaml
 hostname: devbox-app
+```
+
+
+#### Memory
+Use the `memory` property to update the amount of memory allocated to the VM . By default this is `1024`.
+```yaml
+memory: 2048
+```
+
+
+#### CPU
+Use the `cpus` property to update the number of CPU's allocated to the VM . By default this is `1`.
+```yaml
+cpus: 2
 ```
 
 
@@ -50,7 +64,7 @@ forward-ports:
 
 
 #### OS
-Currently, DevBox only supports Ubuntu which defaults to version 16.04. To use a different version, change the `os-version` property. Supported versions are `14.04`, `16.04'`and `18.04`.
+Currently, DevBox only supports Ubuntu and defaults to version 16.04. To use a different version, change the `os-version` property. Supported versions are `14.04`, `16.04'`and `18.04`.
 ```yaml
 os: "ubuntu"
 os-version: "16.04"
