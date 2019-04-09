@@ -136,13 +136,9 @@ Vagrant.configure("2") do |config|
                         group_names << group_name
                     end
 
-                    groups["all:children"] = group_names
-                    groups["all:vars"] = {
-                        "ansible_user" => "vagrant"
-                    }
-
                     node.vm.provision "ansible" do |ansible|
-                        ansible.limit = "all"
+                        ansible.config_file = "ansible.cfg"
+                        ansible.galaxy_role_file = "requirements.yml"
                         ansible.playbook = "provision.yml"
                         ansible.groups = groups
                         if settings.has_key?("debug") and settings["debug"]
