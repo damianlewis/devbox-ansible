@@ -1,7 +1,7 @@
 # DevBox Ansible
 
 ### Introduction
-DevBox Ansible provides a multi server development environment using Vagrant and VirtualBox. It can be provisioned to support numerous configurations via Ansible.
+DevBox Ansible provides a multi server development environment using Vagrant and VirtualBox and is provisioned using Ansible.
 
 
 ### Requirements
@@ -11,20 +11,20 @@ DevBox Ansible provides a multi server development environment using Vagrant and
 
 
 ### Configuration
-The `config.yaml` file allows you to configure the servers by adding individual server settings to the `servers` list property. The example `config.yaml` file demonstrates setting up four servers in a load balanced infrastructure.
+The `config.yaml` file allows you to configure the servers by adding individual server settings to the `servers` list property. The example `config.yaml` file and accompanying playbooks, demonstrate setting up 4 servers in a load balanced infrastructure.
 
 
 #### VM name
 Use the `name` property to update the VirtualBox VM name. By default this is `devbox`.
 ```yaml
-name: devbox_app
+name: devbox_www
 ```
 
 
 #### Hostname
 Use the `hostname` property to update the server hostname. By default this is `devbox`.
 ```yaml
-hostname: devbox-app
+hostname: devbox-www
 ```
 
 
@@ -48,14 +48,14 @@ By default, DevBox will create a private network with automatically assigned IP 
 ip: "192.168.2.40"
 ```
 
-A public IP address can also be given to a server by adding the `public-ip` property.
+A public IP address can also be given to a server by adding the `public_ip` property.
 ```yaml
-public-ip: "192.168.178.41"
+public_ip: "192.168.178.41"
 ```
 
-By default, DevBox forwards port 22 (for SSH) on the guest machine to port 2222 on the host. To forward additional ports, add the `forward-ports` list property with `guest` and `host` properties set to the ports you want to forward.
+By default, DevBox forwards port 22 (for SSH) on the guest machine to port 2222 on the host. To forward additional ports, add the `forward_ports` list property with `guest` and `host` properties set to the ports you want to forward.
 ```yaml
-forward-ports:
+forward_ports:
 - guest: 80
   host: 8000
 - guest: 443
@@ -64,16 +64,10 @@ forward-ports:
 
 
 #### OS
-Currently, DevBox only supports Ubuntu and defaults to version 16.04. To use a different version, change the `os-version` property. Supported versions are `14.04`, `16.04'`and `18.04`.
+Currently, DevBox only supports Ubuntu and defaults to version 16.04. To use a different version, change the `os_version` property. Supported versions are `14.04`, `16.04'`and `18.04`.
 ```yaml
 os: "ubuntu"
-os-version: "16.04"
-```
-
-#### Vagrant box
-You can use a number of predefined Vagrant box types for your server. The current list is `lamp`, `lemp`, `apache-php`, `nginx-php` and `mysql`. To use a particular type, add the `type` property and specify which type you require.
-```yaml
-type: "nginx-php"
+os_version: "16.04"
 ```
 
 You can also specify a particular Vagrant box to use. The will override the OS and server type properties.
@@ -81,9 +75,9 @@ You can also specify a particular Vagrant box to use. The will override the OS a
 box: "nginx-php"
 ```
 
-If you require a particular version of a Vagrant box, use the `box-version` property.
+If you require a particular version of a Vagrant box, use the `box_version` property.
 ```yaml
-box-version: "1"
+box_version: "1"
 ```
 
 
@@ -121,16 +115,42 @@ folders:
   fmode: 664
 ```
 
+If the host path doesn't exsist, it can be created by setting the `create` property to `true`. By default, this is `false`.
+```yaml
+folders:
+- map: ./public
+  to: /var/www/public
+  create: true
+```
+
 
 #### Ansible inventory groups
 DevBox creates an inventory for use with Ansible. By default all servers will be added to a 'devbox' inventory group. You can override this and add servers to different groups by using the `group` property.
 ```yaml
-group: app
+group: devbox_www
 ```
 
 
 ### Ansible provisioning
-The `provision.yaml` file should be used to create the Ansible playbook used to provision the servers.
+The `provision.yaml` file should be used to create an Ansible playbook used to provision the servers.
+
+
+#### Ansible Galaxy Roles
+To import Galaxy roles, create a [requirements YAML file](https://docs.ansible.com/ansible/latest/reference_appendices/galaxy.html#installing-multiple-roles-from-a-file) and set the `galaxy_role_file` property to it's location.
+```yaml
+galaxy_role_file: requirements.yml
+```
+
+By default, DevBox will create a `roles` folder to store the imported roles. Use the `galaxy_roles_path` property to set the path of the roles folder to an alternative location.
+```yaml
+galaxy_roles_path: ~/.ansible/roles
+```
+
+#### Debugging
+Set the `debug` property to `true` to obtain detailed logging with connection debugging.
+```yaml
+debug: true
+```
 
 
 ### Bash aliases

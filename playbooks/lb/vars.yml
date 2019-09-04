@@ -1,0 +1,11 @@
+---
+firewall_allowed_tcp_ports:
+  - "22"
+  - "80"
+  - "443"
+
+haproxy_backend_servers:
+  - name: www1
+    address: 192.168.2.42:80
+  - name: www2
+    address: 192.168.2.43:80

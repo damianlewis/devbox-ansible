@@ -1,0 +1,14 @@
+---
+- hosts: devbox_www
+  become: yes
+  vars_files:
+  - vars.yml
+  tasks:
+  - import_role:
+      name: geerlingguy.firewall
+  - import_role:
+      name: geerlingguy.apache
+  - import_role:
+      name: geerlingguy.php
+  - import_role:
+      name: geerlingguy.php-mysql

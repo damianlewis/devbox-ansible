@@ -1,61 +1,56 @@
 ---
+galaxy_role_file: requirements.yml
+# galaxy_roles_path: ~/.ansible/roles
 # debug: true
 
 # Load balancer server defaults.
-lb-server-defaults: &lb-server
+lb_serve_defaults: &lb_server
   name: devbox_lb
   hostname: devbox-lb
-  group: lb
-  forward-ports:
+  group: devbox_lb
+  forward_ports:
   - guest: 80
     host: 8000
   - guest: 443
     host: 44300
-  os: ubuntu
-  os-version: '16.04'
-  cpus: 2
-  memory: 4096
-
-# Database server defaults.
-db-server-defaults: &db-server
-  name: devbox_db
-  hostname: devbox-db
-  group: db
-  forward-ports:
-  - guest: 3306
-    host: 33060
-  os: ubuntu
-  os-version: '14.04'
-  type: mysql
-  box-version: '1'
 
 # Application server defaults.
-app-server-defaults: &app-server
-  name: devbox_app
-  hostname: devbox-app
-  group: app
-  forward-ports:
+www_server_defaults: &www_server
+  name: devbox_www
+  hostname: devbox-www
+  group: devbox_www
+  forward_ports:
   - guest: 80
     host: 8000
-  os: ubuntu
-  os-version: '16.04'
-  type: apache-php
   folders:
   - map: ./public
     to: /var/www/public
     owner: root
     group: www-data
-    dmode: 755
-    fmode: 644
+    dmode: 775
+    fmode: 664
+    create: true
+
+# Database server defaults.
+db_serve_defaults: &db_server
+  name: devbox_db
+  hostname: devbox-db
+  group: devbox_db
+  forward_ports:
+  - guest: 3306
+    host: 33060
+  os: ubuntu
+  os_version: '18.04'
+  cpus: 2
+  memory: 4096
 
 # Servers to configure.
 servers:
-- <<: *lb-server
-  ip: '192.168.2.40'
-  public-ip: '192.168.2.41'
-- <<: *db-server
+- <<: *lb_server
+  ip: '192.168.2.41'
+- <<: *www_server
   ip: '192.168.2.42'
-- <<: *app-server
+- <<: *www_server
   ip: '192.168.2.43'
-- <<: *app-server
+- <<: *db_server
   ip: '192.168.2.44'

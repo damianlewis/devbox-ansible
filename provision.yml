@@ -1,2 +1,4 @@
 ---
-# Create the playbook to provision the servers.
+- import_playbook: playbooks/lb/main.yml
+- import_playbook: playbooks/www/main.yml
+- import_playbook: playbooks/db/main.yml

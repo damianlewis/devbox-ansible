@@ -8,7 +8,6 @@ aliases = "aliases"
 
 supported_os = ["ubuntu"]
 supported_ubuntu_versions = ["14.04", "16.04", "18.04"]
-supported_box_types = ["lamp", "lemp", "apache-php", "nginx-php", "mysql"]
 
 default_os = "ubuntu"
 default_os_version = "16.04"
@@ -33,32 +32,20 @@ Vagrant.configure("2") do |config|
                 end
             end
 
-            if server.has_key?("os-version")
+            if server.has_key?("os_version")
                 supported_os_version = "supported_#{os}_versions"
-                os_version = server["os-version"]
+                os_version = server["os_version"]
 
                 unless supported_ubuntu_versions.include?("#{os_version}")
                     abort("#{os} version #{os_version} not recognised. Only #{supported_os_version} are currenly supported with DevBox.")
                 end
             end
 
-            if server.has_key?("type")
-                type = server["type"]
-
-                unless supported_box_types.include?("#{type}")
-                    abort("Box type #{type} not recognised. Only #{supported_box_types} are currenly supported with DevBox.")
-                end
-            end
-
             config.vm.define machine do |node|
                 # Configure the vagrant box.
                 node.vm.hostname = "vm#{server_count}-#{hostname}"
-                if server.has_key?("type")
-                    node.vm.box = server["box"] ||= "damianlewis/#{os ||= default_os}-#{os_version ||= default_os_version}-#{type}"
-                else
-                    node.vm.box = server["box"] ||= "damianlewis/#{os ||= default_os}-#{os_version ||= default_os_version}"
-                end
-                node.vm.box_version = server["box-version"] ||= ">= 0"
+                node.vm.box = server["box"] ||= "damianlewis/#{os ||= default_os}-#{os_version ||= default_os_version}"
+                node.vm.box_version = server["box_version"] ||= ">= 0"
 
                 # Configure VirtualBox settings.
                 node.vm.provider "virtualbox" do |vb|
@@ -79,13 +66,13 @@ Vagrant.configure("2") do |config|
                 end
 
                 # Configure public/bridged network.
-                if server.has_key?("public-ip")
-                    node.vm.network "public_network", ip: server["public-ip"], bridge: server["bridge"] ||= "en1: Wi-Fi (AirPort)"
+                if server.has_key?("public_ip")
+                    node.vm.network "public_network", ip: server["public_ip"], bridge: server["bridge"] ||= "en1: Wi-Fi (AirPort)"
                 end
 
                 # Configure ports to forward.
-                if server.has_key?("forward-ports")
-                    server["forward-ports"].each do |port|
+                if server.has_key?("forward_ports")
+                    server["forward_ports"].each do |port|
                         node.vm.network "forwarded_port", guest: port["guest"], host: port["host"] + port_count, auto_correct: true
                     end
 
@@ -129,21 +116,15 @@ Vagrant.configure("2") do |config|
                 end
 
                 # Provision the servers.
-                if server === settings["servers"].last
-                    group_names = []
-
-                    groups.each_key do |group_name|
-                        group_names << group_name
+                node.vm.provision "ansible" do |ansible|
+                    if settings.has_key?("galaxy_role_file")
+                        ansible.galaxy_role_file = settings["galaxy_role_file"]
+                        ansible.galaxy_roles_path = settings["galaxy_roles_path"] ||= "roles"
                     end
-
-                    node.vm.provision "ansible" do |ansible|
-                        ansible.config_file = "ansible.cfg"
-                        ansible.galaxy_role_file = "requirements.yml"
-                        ansible.playbook = "provision.yml"
-                        ansible.groups = groups
-                        if settings.has_key?("debug") and settings["debug"]
-                            ansible.verbose = '-vvv'
-                        end
+                    ansible.playbook = "provision.yml"
+                    ansible.groups = groups
+                    if settings.has_key?("debug") and settings["debug"]
+                        ansible.verbose = '-vvvv'
                     end
                 end
             end
