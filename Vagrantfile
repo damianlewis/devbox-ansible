@@ -18,11 +18,15 @@ Vagrant.configure("2") do |config|
         port_count = 0
 
         settings["servers"].each_with_index do |server, server_count|
-            name = server["name"] ||= "devbox"
-            hostname = server["hostname"] ||= "devbox"
-            group = server["group"] ||= "devbox"
-            machine = "vm#{server_count}_#{name}"
-            groups[server["group"]] << machine
+            if settings["servers"].size > 1
+                machine_name = "#{server["name"] ||= "devbox"}_vm#{server_count}"
+                machine_hostname = "#{server["hostname"] ||= "devbox"}-vm#{server_count}"
+            else
+                machine_name = "devbox_vm"
+                machine_hostname = "devbox"
+            end
+ 
+            groups[server["group"] ||= "all"] << machine_name
 
             if server.has_key?("os")
                 os = server["os"]
@@ -41,15 +45,15 @@ Vagrant.configure("2") do |config|
                 end
             end
 
-            config.vm.define machine do |node|
+            config.vm.define machine_name do |machine|
                 # Configure the vagrant box.
-                node.vm.hostname = "vm#{server_count}-#{hostname}"
-                node.vm.box = server["box"] ||= "damianlewis/#{os ||= default_os}-#{os_version ||= default_os_version}"
-                node.vm.box_version = server["box_version"] ||= ">= 0"
+                machine.vm.hostname = machine_hostname
+                machine.vm.box = server["box"] ||= "damianlewis/#{os ||= default_os}-#{os_version ||= default_os_version}"
+                machine.vm.box_version = server["box_version"] ||= ">= 0"
 
                 # Configure VirtualBox settings.
-                node.vm.provider "virtualbox" do |vb|
-                    vb.name = machine
+                machine.vm.provider "virtualbox" do |vb|
+                    vb.name = machine_name
                     vb.memory = server["memory"] ||= "1024"
                     vb.cpus = server["cpus"] ||= "1"
                     # vb.linked_clone = true
@@ -60,33 +64,33 @@ Vagrant.configure("2") do |config|
 
                 # Configure private network.
                 if server.has_key?("ip")
-                    node.vm.network "private_network", ip: server["ip"]
+                    machine.vm.network "private_network", ip: server["ip"]
                 else
-                    node.vm.network "private_network", type: "dhcp"
+                    machine.vm.network "private_network", type: "dhcp"
                 end
 
                 # Configure public/bridged network.
                 if server.has_key?("public_ip")
-                    node.vm.network "public_network", ip: server["public_ip"], bridge: server["bridge"] ||= "en1: Wi-Fi (AirPort)"
+                    machine.vm.network "public_network", ip: server["public_ip"], bridge: server["bridge"] ||= "en1: Wi-Fi (AirPort)"
                 end
 
                 # Configure ports to forward.
                 if server.has_key?("forward_ports")
                     server["forward_ports"].each do |port|
-                        node.vm.network "forwarded_port", guest: port["guest"], host: port["host"] + port_count, auto_correct: true
+                        machine.vm.network "forwarded_port", guest: port["guest"], host: port["host"] + port_count, auto_correct: true
                     end
 
                     port_count += 1
                 end
 
                 # Disable default shared folder.
-                node.vm.synced_folder ".", "/vagrant", disabled: true
+                machine.vm.synced_folder ".", "/vagrant", disabled: true
 
                 # Configure shared folders.
                 if server.has_key?("folders")
                     server["folders"].each do |folder|
                         if folder["type"] == "nfs"
-                            node.vm.synced_folder folder["map"], folder["to"],
+                            machine.vm.synced_folder folder["map"], folder["to"],
                             create: folder["create"] ||= false,
                             owner: folder["owner"] ||= "",
                             group: folder["group"] ||= "",
@@ -98,7 +102,7 @@ Vagrant.configure("2") do |config|
                               "nolock"
                             ]
                         else
-                            node.vm.synced_folder folder["map"], folder["to"],
+                            machine.vm.synced_folder folder["map"], folder["to"],
                             create: folder["create"] ||= false,
                             owner: folder["owner"] ||= "",
                             group: folder["group"] ||= "",
@@ -116,7 +120,7 @@ Vagrant.configure("2") do |config|
                 end
 
                 # Provision the servers.
-                node.vm.provision "ansible" do |ansible|
+                machine.vm.provision "ansible" do |ansible|
                     if settings.has_key?("galaxy_role_file")
                         ansible.galaxy_role_file = settings["galaxy_role_file"]
                         ansible.galaxy_roles_path = settings["galaxy_roles_path"] ||= "roles"
