@@ -18,12 +18,15 @@ Vagrant.configure("2") do |config|
         port_count = 0
 
         settings["servers"].each_with_index do |server, server_count|
+            name = "#{server["name"] ||= "devbox"}"
+            hostname = "#{server["hostname"] ||= "devbox"}"
+            
             if settings["servers"].size > 1
-                machine_name = "#{server["name"] ||= "devbox"}_vm#{server_count}"
-                machine_hostname = "#{server["hostname"] ||= "devbox"}-vm#{server_count}"
+                machine_name = "#{name}_vm#{server_count}"
+                machine_hostname = "#{hostname}-vm#{server_count}"
             else
-                machine_name = "devbox_vm"
-                machine_hostname = "devbox"
+                machine_name = name
+                machine_hostname = hostname
             end
  
             groups[server["group"] ||= "all"] << machine_name
