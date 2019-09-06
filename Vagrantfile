@@ -48,7 +48,7 @@ Vagrant.configure("2") do |config|
             config.vm.define machine_name do |machine|
                 # Configure the vagrant box.
                 machine.vm.hostname = machine_hostname
-                machine.vm.box = server["box"] ||= "damianlewis/#{os ||= default_os}-#{os_version ||= default_os_version}"
+                machine.vm.box = server["box"] ||= "bento/#{os ||= default_os}-#{os_version ||= default_os_version}"
                 machine.vm.box_version = server["box_version"] ||= ">= 0"
 
                 # Configure VirtualBox settings.
