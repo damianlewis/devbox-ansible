@@ -3,7 +3,7 @@
 
 require 'yaml'
 
-settings = YAML::load(File.read("config.yaml"))
+settings = YAML::load(File.read("devbox_config.yaml"))
 aliases = "aliases"
 
 supported_os = ["ubuntu"]
@@ -121,7 +121,7 @@ Vagrant.configure("2") do |config|
                         ansible.galaxy_role_file = settings["galaxy_role_file"]
                         ansible.galaxy_roles_path = settings["galaxy_roles_path"] ||= "roles"
                     end
-                    ansible.playbook = "provision.yml"
+                    ansible.playbook = "configure.yml"
                     ansible.groups = groups
                     if settings.has_key?("debug") and settings["debug"]
                         ansible.verbose = '-vvvv'

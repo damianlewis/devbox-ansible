@@ -1,5 +1,5 @@
 ---
-- hosts: devbox_db
+- hosts: db
   become: yes
   vars_files:
   - vars.yml

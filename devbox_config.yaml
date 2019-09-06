@@ -7,7 +7,7 @@ galaxy_role_file: requirements.yml
 lb_serve_defaults: &lb_server
   name: devbox_lb
   hostname: devbox-lb
-  group: devbox_lb
+  group: lb
   forward_ports:
   - guest: 80
     host: 8000
@@ -18,7 +18,7 @@ lb_serve_defaults: &lb_server
 www_server_defaults: &www_server
   name: devbox_www
   hostname: devbox-www
-  group: devbox_www
+  group: www
   forward_ports:
   - guest: 80
     host: 8000
@@ -35,7 +35,7 @@ www_server_defaults: &www_server
 db_serve_defaults: &db_server
   name: devbox_db
   hostname: devbox-db
-  group: devbox_db
+  group: db
   forward_ports:
   - guest: 3306
     host: 33060

@@ -1,5 +1,5 @@
 ---
-- hosts: devbox_www
+- hosts: www
   become: yes
   vars_files:
   - vars.yml
