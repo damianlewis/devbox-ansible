@@ -1,4 +1,0 @@
-alias ..='cd ..'
-alias ...='cd ../..'
-alias l='ls -lah'
-alias c='clear'

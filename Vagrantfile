@@ -114,11 +114,6 @@ Vagrant.configure("2") do |config|
                     end
                 end
 
-                # Create bash aliases.
-                if File.exists? aliases
-                    node.vm.provision "file", source: aliases, destination: "~/.bash_aliases"
-                end
-
                 # Provision the servers.
                 machine.vm.provision "ansible" do |ansible|
                     if settings.has_key?("galaxy_role_file")
